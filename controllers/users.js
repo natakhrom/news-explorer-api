@@ -9,7 +9,7 @@ const AuthError = require('../errors/auth-err');
 module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => {
-      throw new NotFoundError('Нет пользователя с таким id');
+      throw new NotFoundError({ message: 'Нет пользователя с таким id' });
     })
     .then((user) => res.send({ data: user }))
     .catch(next);
@@ -27,7 +27,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'MongoError' && err.code === 11000) {
-        next(new Conflict('На сервере произошла ошибка'));
+        next(new Conflict({ message: 'На сервере произошла ошибка' }));
       } else {
         next(err);
       }
@@ -48,6 +48,6 @@ module.exports.login = (req, res, next) => {
       res.send({ token });
     })
     .catch(() => {
-      next(new AuthError('Неправильные почта или пароль'));
+      next(new AuthError({ message: 'Неправильные почта или пароль' }));
     });
 };

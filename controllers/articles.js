@@ -24,18 +24,18 @@ module.exports.createArticle = (req, res, next) => {
 
 module.exports.deleteArticle = (req, res, next) => {
   Article.findById(req.params.articleId).select('+owner')
-    .orFail(() => new NotFoundError('Нет статьи с таким id'))
+    .orFail(() => new NotFoundError({ message: 'Нет статьи с таким id' }))
     .then((article) => {
       if (!article.owner.equals(req.user._id)) {
-        throw new Forbidden('Нет прав на удаление статьи');
+        throw new Forbidden({ message: 'Нет прав на удаление статьи' });
       }
 
-      Article.findByIdAndRemove(req.params.articleId)
+      Article.deleteOne(article)
         .then((deleteArticle) => {
           if (!deleteArticle) {
-            throw new NotFoundError('Не удалось удалить карточку');
+            throw new NotFoundError({ message: 'Не удалось удалить статью' });
           }
-          res.send({ data: deleteArticle });
+          res.send({ data: article });
         });
     })
     .catch(next);
