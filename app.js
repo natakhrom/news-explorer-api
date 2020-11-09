@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
@@ -19,6 +20,7 @@ mongoose.connect(MONGO_DB_PATH, {
   useFindAndModify: false,
 });
 
+app.use(cors({ credentials: true }));
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
