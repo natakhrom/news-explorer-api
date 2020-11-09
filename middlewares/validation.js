@@ -84,7 +84,6 @@ const validateSignin = celebrate({
 });
 
 module.exports = {
-  // validateObjectId,
   validateArticle,
   validateDeleteArticle,
   validateSignup,
