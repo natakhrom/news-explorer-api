@@ -3,8 +3,11 @@ const NotFoundError = require('../errors/not-found-err');
 const Forbidden = require('../errors/forbidden-err');
 
 module.exports.getArticles = (req, res, next) => {
-  Article.find({})
-    .then((article) => res.send({ data: article }))
+  Article.find({}).select('+owner')
+    .then((articles) => {
+      const userArticles = articles.filter((item) => item.owner.equals(req.user._id));
+      res.send({ data: userArticles });
+    })
     .catch(next);
 };
 
